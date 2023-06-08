@@ -11,11 +11,13 @@ import FormikLayout from "../../../layouts/dashboard/formik-layout";
 import option_data from '../../../json/data.json';
 
 //Logical On Off
-import { disable_logic } from "../../../api/logic-checker";
+import { disable_logic, next_point } from "../../../api/logic-checker";
 
-
+import { useRouter } from 'next/router';
 //const fetcher = (url) => fetch(url).then((res) => res.json());
 const section1=()=>{
+
+  const router = useRouter();
 
   const { isValid, isSubmitting,values,errors, touched, setFieldValue, setFieldTouched } = useFormikContext();
 
@@ -25,7 +27,20 @@ const section1=()=>{
 <div className="row mb-3">
     <label htmlFor="inputText" className="col-sm-2 col-form-label">name</label>
     <div className="col-sm-10">      
-      <Field className='form-control' name="section1.name" placeholder="name of person" />
+      <Field 
+      className='form-control' 
+      name="section1.name" 
+      placeholder="name of person" 
+      onChange={(e) => {
+        const {value, name} = e.target;
+        //console.log(value,name,value.length)
+        //disable_logic(name,value, setFieldValue,["len"]); 
+        setFieldValue(
+          name,
+          value
+        );
+      }}
+      />
       {errors.section1 &&
                                         
                                         errors.section1.name &&
@@ -39,7 +54,7 @@ const section1=()=>{
     </div>
 </div>
 
-
+{values.section1.name.length >0 &&
 <fieldset className="row mb-3">
     <legend className="col-form-label col-sm-2 pt-0">Gender</legend>
     <div className="col-sm-10">
@@ -60,6 +75,7 @@ const section1=()=>{
             const {checked, name} = e.target;  
                 //console.log(checked,name)
                 disable_logic(name,v.value, setFieldValue,["not"]);
+                
                 if (checked) {
 
                     setFieldValue(
@@ -74,6 +90,7 @@ const section1=()=>{
                     );
 
                 }
+                next_point(name,v.value,router,["is"]);
                 //console.log(values);
                 //ctx.setData(values);
             }}
@@ -99,6 +116,8 @@ const section1=()=>{
                                             </span>   
                                         )}
 </fieldset>
+}
+
 {values.section1.gender && values.section1.gender == 1 && 
 
 <div className="row mb-3">

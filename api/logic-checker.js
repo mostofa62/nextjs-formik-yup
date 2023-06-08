@@ -1,7 +1,10 @@
 import DIS_LOGIC from '../json/disablelogic.json';
+import NEXT_POINT from '../json/nextpoint.json';
 
 
-const disable_logic=(name,value, setFieldValue,logic_option)=>{
+
+
+const disable_logic=(name,value, setFieldValue, logic_option)=>{
 
         //console.log(name);
         if(DIS_LOGIC.hasOwnProperty(name)){
@@ -75,6 +78,46 @@ function found_disabled(found, fields, setFieldValue){
         }
     }
 }
+
+const next_point = (name, value,router ,logic_option)=>{
+    if(NEXT_POINT.hasOwnProperty(name)){
+
+        var ds_logic_array = NEXT_POINT[name];
+
+            for (let i = 0; i < ds_logic_array.length; i++) {
+                var element = ds_logic_array[i];
+                //console.log(element[logic_option]);
+                var first_key = Object.keys(ds_logic_array[i])[0];
+
+                var found_key = logic_option.find((search)=>{
+                    return search == first_key;
+                });
+
+                if(found_key == "is"){
+                    var is = element[found_key];
+                    var field = element["goto"];
+                    var redirect = field.split(".")[0];
+                    var found = is.find((search)=>{
+                        return search == value? search:null;
+                    });
+                    found_redirect(found,redirect,field,router);
+                    
+                    break;
+                }
+
+            }
+
+    }
+
+}
+
+function found_redirect(found,redirect, field,router){
+    
+    if( typeof found != 'undefined'){   
+        router.push(redirect)
+    }
+}
 export {
-    disable_logic
+    disable_logic,
+    next_point
 }
